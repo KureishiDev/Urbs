@@ -1,0 +1,76 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+import folium
+import geopandas as gpd
+
+# 1. Coleta e Limpeza de Dados (Exemplo Simplificado - Substitua pelos seus dados reais)
+# Supondo que você tenha arquivos CSV para linhas, demanda e reclamações
+linhas = pd.read_csv('linhas_onibus.csv')
+demanda = pd.read_csv('demanda_onibus.csv')
+reclamacoes = pd.read_csv('reclamacoes_urb.csv')
+
+# Limpeza básica (adapte conforme necessário)
+demanda['data_hora'] = pd.to_datetime(demanda['data_hora'])
+reclamacoes.dropna(inplace=True)
+
+# 2. Análise Exploratória de Dados (EDA)
+# Demanda por linha
+demanda_linha = demanda.groupby('linha')['passageiros'].sum().sort_values(ascending=False)
+plt.figure(figsize=(12, 6))
+demanda_linha.plot(kind='bar')
+plt.title('Demanda por Linha de Ônibus')
+plt.xlabel('Linha')
+plt.ylabel('Passageiros')
+plt.show()
+
+# Reclamações por tipo
+reclamacoes_tipo = reclamacoes['tipo'].value_counts()
+plt.figure(figsize=(8, 8))
+plt.pie(reclamacoes_tipo, labels=reclamacoes_tipo.index, autopct='%1.1f%%')
+plt.title('Distribuição de Reclamações por Tipo')
+plt.show()
+
+# 3. Visualização de Dados Geográficos (Exemplo Simplificado)
+# Supondo que você tenha um GeoDataFrame com a localização das linhas
+# Se não tiver, você precisará converter as coordenadas em um GeoDataFrame
+# Exemplo fictício:
+# linhas_geo = gpd.GeoDataFrame(linhas, geometry=gpd.points_from_xy(linhas.longitude, linhas.latitude))
+
+# Mapa centralizado em Curitiba
+mapa_curitiba = folium.Map(location=[-25.4296, -49.2719], zoom_start=12)
+
+# Adicionar marcadores para algumas linhas (exemplo)
+for index, row in linhas.head(10).iterrows():
+    folium.Marker(location=[row['latitude'], row['longitude']], popup=row['nome_linha']).add_to(mapa_curitiba)
+
+mapa_curitiba.save('mapa_linhas_onibus.html') # Salva o mapa como um arquivo HTML
+
+# 4. Análise de Desempenho (Exemplo Simplificado)
+# Tempo médio de viagem (exemplo fictício - adapte com seus dados)
+# tempo_viagem = ...
+# plt.figure(figsize=(10, 6))
+# sns.histplot(tempo_viagem, kde=True)
+# plt.title('Distribuição do Tempo de Viagem')
+# plt.xlabel('Tempo (minutos)')
+# plt.show()
+
+# 5. Modelagem Preditiva (Opcional - Exemplo Simplificado)
+# (Adapte com seus dados e escolha um modelo apropriado)
+# from sklearn.model_selection import train_test_split
+# from sklearn.linear_model import LinearRegression
+# from sklearn.metrics import mean_squared_error
+
+# features = ['horario', 'dia_semana'] # Exemplo
+# target = 'passageiros'
+
+# demanda_modelo = demanda.dropna(subset=features + [target])
+
+# X_train, X_test, y_train, y_test = train_test_split(demanda_modelo[features], demanda_modelo[target], test_size=0.2, random_state=42)
+
+# modelo = LinearRegression()
+# modelo.fit(X_train, y_train)
+
+# y_pred = modelo.predict(X_test)
+# mse = mean_squared_error(y_test, y_pred)
+# print(f'Erro Quadrático Médio (MSE): {mse}')
