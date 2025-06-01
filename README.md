@@ -31,7 +31,7 @@ This project provides an analysis of public bus data using Python, focusing on d
 ## Files
 - `linhas_onibus.csv`: Contains bus line information, including line names and geographic data.
 - `demanda_onibus.csv`: Contains bus demand data with timestamps and passenger counts.
-- `reclamacoes_urb.csv`: Contains urban complaints data categorized by type.
+- `reclamacoes_urbs.csv`: Contains urbs complaints data categorized by type.
 - `mapa_linhas_onibus.html`: Output file generated with interactive map visualization.
 
 ## Requirements
